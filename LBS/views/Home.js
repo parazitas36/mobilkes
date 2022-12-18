@@ -1,19 +1,19 @@
-import { 
-    View, 
+import {
+    View,
     StyleSheet,
-    Dimensions, 
-    ScrollView, 
-    ActivityIndicator, 
-    Text, 
+    Dimensions,
+    ScrollView,
+    ActivityIndicator,
+    Text,
     ToastAndroid,
- } from 'react-native'
+} from 'react-native'
 import React, { useContext, useLayoutEffect, useState } from 'react'
 import Cell from '../components/Cell'
 import GetCall from '../api/GetCall'
 import { ENDPOINT_Grid } from '../api/Constants'
 import { createTables, dbExists, getGrid, insertGrid } from '../database/db'
 import { Context } from '../App'
-import { Snackbar, Button } from '@react-native-material/core'
+import { Snackbar, Button, AppBar } from '@react-native-material/core'
 
 const device_width = Dimensions.get('screen').width
 const device_height = Dimensions.get('screen').height
@@ -40,7 +40,7 @@ const Home = () => {
 
                 setGridData(resp_data)
             } else if (dbExist !== null && gridData === null) {
-                
+
                 await getGrid({ gridState: [gridData, setGridData] })
             }
 
@@ -97,37 +97,38 @@ const Home = () => {
     if (!isLoaded || gridData === null) {
         return (
             <View style={styles.view}>
-                <ActivityIndicator size='large' color="#694fad" />
-                <Text>Loading</Text>
-                <Snackbar
-                    message={`Loading data from the ${dbExist ? 'local database' : 'api'}.`}
-                    style={{ position: "absolute", start: 16, end: 16, bottom: 12 }}
-                />
+                <AppBar title='Home' color='#694fad' />
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator size='large' color="#694fad" />
+                    <Text>Loading</Text>
+                    <Snackbar
+                        message={`Loading data from the ${dbExist ? 'local database' : 'api'}.`}
+                        style={{ position: "absolute", start: 16, end: 16, bottom: 12 }}
+                    />
+                </View>
             </View>
         )
     }
 
     return (
-        <ScrollView contentContainerStyle={styles.view}>
-            {gridData && gridData.length > 0 && Grid().map((x) => {
-                return <View style={styles.gridView}>
-                    {x.map((y) => {
-                        return y
-                    })}
-                </View>
-            })}
-        </ScrollView>
+        <View style={styles.view}>
+            <AppBar title='Home' color='#694fad' style={{ marginBottom: 5}}/>
+            <ScrollView style={{ height: '100%' }}>
+                {gridData && gridData.length > 0 && Grid().map((x) => {
+                    return <View style={styles.gridView}>
+                        {x.map((y) => {
+                            return y
+                        })}
+                    </View>
+                })}
+            </ScrollView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     view: {
-        width: '100%',
-        height: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignSelf: 'center',
-        alignContent: 'center',
+        flex: 1,
         backgroundColor: 'rgba(204, 205, 198, 0.33)',
     },
     gridView: {

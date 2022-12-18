@@ -1,15 +1,20 @@
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native'
 import React, { useState, useContext, useLayoutEffect } from 'react'
 import { Context } from '../App'
-import { getSignals, insertSignals } from '../database/db'
+import { getSignals, insertSignals, deleteSignal } from '../database/db'
 import { PressableText } from '../components/PressableText'
 import { ActivityIndicator } from 'react-native-paper'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import AddSignalDialog from '../components/AddSignalDialog'
-import { Provider } from '@react-native-material/core'
+import EditSignalDialog from '../components/EditSignalDialog'
+import { AppBar, Provider } from '@react-native-material/core'
 
-const Item = ({ item }) => {
+const Item = ({ item, reloadState, editState, editSignalState }) => {
+  const [reload, setReload] = reloadState
+  const [editMode, setEditMode]= editState
+  const [editSignal, setEditSignal] = editSignalState
+
   return (
     <View style={styles.itemView}>
       <View style={{ width: '70%' }}>
@@ -18,8 +23,8 @@ const Item = ({ item }) => {
         </Text>
       </View>
       <View style={styles.clickablesView}>
-        <PressableText text={'edit'} textColor={'green'} onClick={() => console.log('edit')} />
-        <PressableText text={'remove'} textColor={'red'} onClick={() => console.log('remove')} />
+        <PressableText text={'edit'} textColor={'green'} onClick={() => { setEditMode(true); setEditSignal(item); }} />
+        <PressableText text={'remove'} textColor={'red'} onClick={async() => { await deleteSignal(item.id); setReload(true) }} />
       </View>
     </View>
   )
@@ -40,7 +45,9 @@ const SignalsList = () => {
   const [selectedPoints, setSelectedPoints] = s_points
   const [isLoaded, setIsLoaded] = useState(selectedPoints === null)
   const [visible, setVisible] = useState(false)
+  const [editMode, setEditMode] = useState(false)
   const [reload, setReload] = useState(false)
+  const [editSignal, setEditSignal] = useState(null)
 
   useLayoutEffect(() => {
     (async () => {
@@ -49,13 +56,16 @@ const SignalsList = () => {
       setIsLoaded(true)
       setReload(false)
     })()
-  }, [reload === true])
+  }, [reload === true, selectedPoints === null])
 
   if (!isLoaded) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{flex: 1}}>
+        <AppBar title='Signals list' color='#694fad' style={{ marginBottom: 5}}/>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size={'large'} color="#694fad" />
         <Text>Loading</Text>
+      </View>
       </View>
     )
   }
@@ -63,12 +73,19 @@ const SignalsList = () => {
   return (
     <Provider>
       <View style={{ flex: 1 }}>
+        <AppBar title='Signals list' color='#694fad' style={{ marginBottom: 5}}/>
         <AddSignalDialog 
           state={[visible, setVisible]} 
           reloadState={[reload, setReload]} />
+        { editSignal && 
+          <EditSignalDialog 
+            state={[editMode, setEditMode]}
+            reloadState={[reload, setReload]} 
+            current={editSignal}/> 
+        }
         <ScrollView>
           {selectedPoints && selectedPoints.length > 0 && selectedPoints.map((i) => {
-            return <Item item={i} />
+            return <Item item={i} reloadState={[reload, setReload]} editState={[editMode, setEditMode]} editSignalState={[editSignal, setEditSignal]} />
           })}
           {selectedPoints && selectedPoints.length === 0 && <Text>No signals were added.</Text>}
         </ScrollView>

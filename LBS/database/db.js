@@ -108,13 +108,47 @@ export const insertSignals = async (signals) => {
 
     const query = `INSERT INTO ${signalsTable}(ap1, ap2, ap3) values` +
         signals.map(i => `(${i.ap1}, ${i.ap2}, ${i.ap3})`).join(',');
-    console.log(query)
 
     await db.transaction(txn => {
         txn.executeSql(query,
             [],
             (sqlTxn, res) => {
                 console.log('Signals inserted')
+            },
+            error => {
+                console.log(error)
+            })
+    })
+}
+
+export const editSignal = async (signal) => {
+    const db = await getDBConnection()
+
+    const query = `UPDATE  ${signalsTable} ` + 
+    `SET ap1 = ${signal.ap1}, ap2 = ${signal.ap2}, ap3 = ${signal.ap3} WHERE id = ${signal.id}`;
+
+    await db.transaction(txn => {
+        txn.executeSql(query,
+            [],
+            (sqlTxn, res) => {
+                console.log('Signal updated')
+            },
+            error => {
+                console.log(error)
+            })
+    })
+}
+
+export const deleteSignal = async (id) => {
+    const db = await getDBConnection()
+
+    const query = `DELETE from ${signalsTable} where id = ${id}`;
+
+    await db.transaction(txn => {
+        txn.executeSql(query,
+            [],
+            (sqlTxn, res) => {
+                console.log('Signal deleted')
             },
             error => {
                 console.log(error)

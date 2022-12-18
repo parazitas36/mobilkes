@@ -6,8 +6,9 @@ import { getUsers, insertUsers, usersExists } from '../database/db'
 import { ENDPOINT_Users } from '../api/Constants'
 import GetCall from '../api/GetCall'
 import { ActivityIndicator } from 'react-native-paper'
+import { AppBar } from '@react-native-material/core'
 
-const Users = ({navigation}) => {
+const Users = ({ navigation }) => {
   const [data, setData] = useState(null)
   const [isLoaded, setIsLoaded] = useState(false)
   const [usersExist, setUsersExist] = useState(null)
@@ -34,31 +35,37 @@ const Users = ({navigation}) => {
 
   if (!isLoaded || data === null) {
     return (
-      <View style={styles.view}>
-        <ActivityIndicator size='large' color="#694fad" />
-        <Text>Loading</Text>
+      <View style={{ flex: 1 }}>
+        <AppBar title='Users' color='#694fad' style={{ marginBottom: 5 }} />
+        <View style={styles.view}>
+          <ActivityIndicator size='large' color="#694fad" />
+          <Text>Loading</Text>
+        </View>
       </View>
+
     )
   }
 
   return (
-    <ScrollView>
-      {data !== null && data.length > 0 && data.map((x) => {
-        return <UserDetails item={x} navigation={navigation}/>
-      })}
-    </ScrollView>
+    <View style={{ flex: 1 }}>
+      <AppBar title='Users' color='#694fad' style={{ marginBottom: 5 }} />
+      <ScrollView style={{ height: '100%' }}>
+        {data !== null && data.length > 0 && data.map((x) => {
+          return <UserDetails item={x} navigation={navigation} />
+        })}
+      </ScrollView>
+    </View>
+
   )
 }
 
 const styles = StyleSheet.create({
   view: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
     alignContent: 'center',
-    backgroundColor: 'rgba(204, 205, 198, 0.33)',
   },
 })
 

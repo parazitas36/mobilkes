@@ -29,7 +29,7 @@ const HomeScreen = () => {
       screenOptions={{
         headerTitleAlign: 'center'
       }}>
-      <HomeStack.Screen options={{ animationEnabled: true }} name='Home' component={Home} />
+      <HomeStack.Screen options={{ headerShown: false, animationEnabled: true }} name='Home' component={Home} />
     </HomeStack.Navigator>
   )
 }
@@ -40,7 +40,7 @@ const SignalsScreen = () => {
       screenOptions={{
         headerTitleAlign: 'center'
       }}>
-      <SignalsStack.Screen options={{ animationEnabled: true }} name='Signals' component={SignalsList} />
+      <SignalsStack.Screen options={{ headerShown: false, animationEnabled: true }} name='Signals' component={SignalsList} />
     </SignalsStack.Navigator>
   )
 }
@@ -51,7 +51,7 @@ const UsersScreen = () => {
       screenOptions={{
         headerTitleAlign: 'center'
       }}>
-      <UsersStack.Screen options={{ animationEnabled: true }} name='Users' component={Users} />
+      <UsersStack.Screen options={{ headerShown: false, animationEnabled: true }} name='Users' component={Users} />
       <UsersStack.Screen options={{ headerShown: false, animationEnabled: true }} name='Home' component={HomeScreen} />
     </UsersStack.Navigator>
   )
@@ -80,7 +80,7 @@ const App = () => {
             flex: 1
           }}>
           <StatusBar
-            backgroundColor='#694fad'
+            backgroundColor='#93AD4F'
           />
           <NavigationContainer>
             <Tab.Navigator
