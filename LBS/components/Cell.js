@@ -4,26 +4,25 @@ import React from 'react'
 const Cell = ({ x, y, empty, user, points, size }) => {
   var bg_color = 'rgba(0, 0, 0, 0.85)'
 
-  if(empty){
+  if (empty) {
     bg_color = 'none'
   }
 
-  if(user !== null && user.x == x && user.y == y){
-    console.log('yra')
+  if (user !== null && user.x == x && user.y == y) {
     bg_color = 'tomato'
   }
-    const styles = StyleSheet.create({
-        view: {
-            backgroundColor: bg_color,
-            borderRadius: 1,
-            width: size,
-            height: size,
-            alignSelf: 'center',
-        }
-    })
+  const styles = StyleSheet.create({
+    view: {
+      backgroundColor: bg_color,
+      borderRadius: 1,
+      width: size,
+      height: size,
+      alignSelf: 'center',
+    }
+  })
 
   return (
-    <View style={styles.view}/>
+    <View style={styles.view} />
   )
 }
 

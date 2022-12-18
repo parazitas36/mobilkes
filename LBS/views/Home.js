@@ -5,7 +5,6 @@ import {
     ScrollView,
     ActivityIndicator,
     Text,
-    ToastAndroid,
 } from 'react-native'
 import React, { useContext, useLayoutEffect, useState } from 'react'
 import Cell from '../components/Cell'
@@ -13,7 +12,10 @@ import GetCall from '../api/GetCall'
 import { ENDPOINT_Grid } from '../api/Constants'
 import { createTables, dbExists, getGrid, insertGrid } from '../database/db'
 import { Context } from '../App'
-import { Snackbar, Button, AppBar } from '@react-native-material/core'
+import { Snackbar, Button, AppBar, IconButton, Pressable } from '@react-native-material/core'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import SignalsModal from '../components/SignalsModal'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 const device_width = Dimensions.get('screen').width
 const device_height = Dimensions.get('screen').height
@@ -25,6 +27,7 @@ const Home = () => {
     const [gridData, setGridData] = grid
     const [dbExist, setDbExist] = useState(gridData === null ? null : true)
     const [isLoaded, setIsLoaded] = useState(gridData === null)
+    const [showSignalsList, setShowSignalsList] = useState(false)
 
     useLayoutEffect(() => {
         (async () => {
@@ -112,7 +115,16 @@ const Home = () => {
 
     return (
         <View style={styles.view}>
-            <AppBar title='Home' color='#694fad' style={{ marginBottom: 5}}/>
+            <AppBar title='Home' color='#694fad' style={{ marginBottom: 5 }}
+                trailing={_ =>
+                    <TouchableOpacity>
+                        <Pressable style={{marginRight: 10}} onPress={() => setShowSignalsList(true)}>
+                            <MaterialCommunityIcons name='format-list-checks' color='white' size={28} />
+                        </Pressable>
+                    </TouchableOpacity>
+                }
+            />
+            <SignalsModal visibleState={[showSignalsList, setShowSignalsList]}/>
             <ScrollView style={{ height: '100%' }}>
                 {gridData && gridData.length > 0 && Grid().map((x) => {
                     return <View style={styles.gridView}>

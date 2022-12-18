@@ -11,7 +11,6 @@ const UserDetails = ({item, navigation}) => {
     const[selectedPoints, setSelectedPoints] = s_points
 
     const onClick = async() => {
-        console.log(`${ENDPOINT_Signals}location/${item.stiprumai.join('/')}`)
         const data = await GetCall(`${ENDPOINT_Signals}location/${item.stiprumai.join('/')}`)
         ToastAndroid.show("Sending request...", ToastAndroid.SHORT)
         setSelectedPoints(null)

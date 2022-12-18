@@ -18,7 +18,6 @@ const Users = ({ navigation }) => {
       if (usersExist === null) {
         await usersExists({ usersExistState: [usersExist, setUsersExist] })
       }
-      console.log('after ', usersExist)
       if (usersExist !== null && !usersExist && data === null) {
         const resp_data = await GetCall(ENDPOINT_Users)
 
@@ -42,7 +41,6 @@ const Users = ({ navigation }) => {
           <Text>Loading</Text>
         </View>
       </View>
-
     )
   }
 
@@ -55,7 +53,6 @@ const Users = ({ navigation }) => {
         })}
       </ScrollView>
     </View>
-
   )
 }
 

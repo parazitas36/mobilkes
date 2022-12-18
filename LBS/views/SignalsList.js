@@ -12,7 +12,7 @@ import { AppBar, Provider } from '@react-native-material/core'
 
 const Item = ({ item, reloadState, editState, editSignalState }) => {
   const [reload, setReload] = reloadState
-  const [editMode, setEditMode]= editState
+  const [editMode, setEditMode] = editState
   const [editSignal, setEditSignal] = editSignalState
 
   return (
@@ -24,7 +24,7 @@ const Item = ({ item, reloadState, editState, editSignalState }) => {
       </View>
       <View style={styles.clickablesView}>
         <PressableText text={'edit'} textColor={'green'} onClick={() => { setEditMode(true); setEditSignal(item); }} />
-        <PressableText text={'remove'} textColor={'red'} onClick={async() => { await deleteSignal(item.id); setReload(true) }} />
+        <PressableText text={'remove'} textColor={'red'} onClick={async () => { await deleteSignal(item.id); setReload(true) }} />
       </View>
     </View>
   )
@@ -60,12 +60,12 @@ const SignalsList = () => {
 
   if (!isLoaded) {
     return (
-      <View style={{flex: 1}}>
-        <AppBar title='Signals list' color='#694fad' style={{ marginBottom: 5}}/>
+      <View style={{ flex: 1 }}>
+        <AppBar title='Signals list' color='#694fad' style={{ marginBottom: 5 }} />
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size={'large'} color="#694fad" />
-        <Text>Loading</Text>
-      </View>
+          <ActivityIndicator size={'large'} color="#694fad" />
+          <Text>Loading</Text>
+        </View>
       </View>
     )
   }
@@ -73,21 +73,21 @@ const SignalsList = () => {
   return (
     <Provider>
       <View style={{ flex: 1 }}>
-        <AppBar title='Signals list' color='#694fad' style={{ marginBottom: 5}}/>
-        <AddSignalDialog 
-          state={[visible, setVisible]} 
+        <AppBar title='Signals list' color='#694fad' style={{ marginBottom: 5 }} />
+        <AddSignalDialog
+          state={[visible, setVisible]}
           reloadState={[reload, setReload]} />
-        { editSignal && 
-          <EditSignalDialog 
+        {editSignal &&
+          <EditSignalDialog
             state={[editMode, setEditMode]}
-            reloadState={[reload, setReload]} 
-            current={editSignal}/> 
+            reloadState={[reload, setReload]}
+            current={editSignal} />
         }
         <ScrollView>
           {selectedPoints && selectedPoints.length > 0 && selectedPoints.map((i) => {
             return <Item item={i} reloadState={[reload, setReload]} editState={[editMode, setEditMode]} editSignalState={[editSignal, setEditSignal]} />
           })}
-          {selectedPoints && selectedPoints.length === 0 && <Text>No signals were added.</Text>}
+          {selectedPoints && selectedPoints.length === 0 && <Text style={{textAlign: 'center'}}>No signals were added.</Text>}
         </ScrollView>
         <View style={{ width: '100%', alignItems: 'flex-end', height: 100, justifyContent: 'center', paddingRight: 15 }}>
           <FAB onCLick={() => setVisible(!visible)} />
