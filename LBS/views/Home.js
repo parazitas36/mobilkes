@@ -1,20 +1,29 @@
-import { View, StyleSheet, Dimensions, ScrollView, ActivityIndicator, Text, ToastAndroid } from 'react-native'
+import { 
+    View, 
+    StyleSheet,
+    Dimensions, 
+    ScrollView, 
+    ActivityIndicator, 
+    Text, 
+    ToastAndroid,
+ } from 'react-native'
 import React, { useContext, useLayoutEffect, useState } from 'react'
 import Cell from '../components/Cell'
 import GetCall from '../api/GetCall'
 import { ENDPOINT_Grid } from '../api/Constants'
 import { createTables, dbExists, getGrid, insertGrid } from '../database/db'
 import { Context } from '../App'
+import { Snackbar, Button } from '@react-native-material/core'
 
 const device_width = Dimensions.get('screen').width
 const device_height = Dimensions.get('screen').height
 
 const Home = () => {
-    const [dbExist, setDbExist] = useState(gridData === null ? null : true)
     const { s_user, s_points, grid } = useContext(Context)
-    const[selectedUser, setSelectedUser] = s_user
-    const[selectedPoints, setSelectedPoints] = s_points
-    const[gridData, setGridData] = grid
+    const [selectedUser, setSelectedUser] = s_user
+    const [selectedPoints, setSelectedPoints] = s_points
+    const [gridData, setGridData] = grid
+    const [dbExist, setDbExist] = useState(gridData === null ? null : true)
     const [isLoaded, setIsLoaded] = useState(gridData === null)
 
     useLayoutEffect(() => {
@@ -24,17 +33,14 @@ const Home = () => {
             }
 
             if (dbExist !== null && !dbExist && gridData === null) {
-                await createTables()
-                
-                ToastAndroid.show("Loading data from api.",
-                    ToastAndroid.SHORT);
+                await createTables();
+
                 const resp_data = await GetCall(ENDPOINT_Grid)
                 await insertGrid(resp_data)
 
                 setGridData(resp_data)
             } else if (dbExist !== null && gridData === null) {
-                ToastAndroid.show("Loading data from local database.",
-                    ToastAndroid.SHORT);
+                
                 await getGrid({ gridState: [gridData, setGridData] })
             }
 
@@ -93,6 +99,10 @@ const Home = () => {
             <View style={styles.view}>
                 <ActivityIndicator size='large' color="#694fad" />
                 <Text>Loading</Text>
+                <Snackbar
+                    message={`Loading data from the ${dbExist ? 'local database' : 'api'}.`}
+                    style={{ position: "absolute", start: 16, end: 16, bottom: 12 }}
+                />
             </View>
         )
     }

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Pressable } from 'react-native'
+import { StyleSheet, Text, View, Pressable, ToastAndroid } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Context } from '../App';
@@ -13,6 +13,7 @@ const UserDetails = ({item, navigation}) => {
     const onClick = async() => {
         console.log(`${ENDPOINT_Signals}location/${item.stiprumai.join('/')}`)
         const data = await GetCall(`${ENDPOINT_Signals}location/${item.stiprumai.join('/')}`)
+        ToastAndroid.show("Sending request...", ToastAndroid.SHORT)
         setSelectedPoints(null)
         setSelectedUser({x: data.x, y: data.y})
         navigation.navigate('Home')

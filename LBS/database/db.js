@@ -107,7 +107,8 @@ export const insertSignals = async (signals) => {
     const db = await getDBConnection()
 
     const query = `INSERT INTO ${signalsTable}(ap1, ap2, ap3) values` +
-        signals.map(i => `('${i.ap1}, ${i.ap2}, ${i.ap3})`).join(',');
+        signals.map(i => `(${i.ap1}, ${i.ap2}, ${i.ap3})`).join(',');
+    console.log(query)
 
     await db.transaction(txn => {
         txn.executeSql(query,
@@ -193,7 +194,7 @@ export const getUsers = async ({usersState}) => {
 export const getSignals = async ({signalsState}) => {
     try {
         const db = await getDBConnection()
-        const [data, setData] = signalsState
+        const [selectedPoints, setSelectedPoints] = signalsState
 
         await db.transaction(txn => {
             txn.executeSql(`SELECT * FROM ${signalsTable}`,
@@ -203,9 +204,14 @@ export const getSignals = async ({signalsState}) => {
 
                     for(var i = 0; i < res.rows.length; i++){
                         let item = res.rows.item(i)
-                        signals.push({ id: item.id, stiprumai: [item.ap1, item.ap2, item.ap3]})
+                        signals.push({ 
+                            id: item.id, 
+                            stiprumai: [item.ap1, item.ap2, item.ap3],
+                            color: null,
+                            selected: false
+                        })
                     }
-                    setData(signals)
+                    setSelectedPoints(signals)
                 },
                 error => {
                     console.log(error)
